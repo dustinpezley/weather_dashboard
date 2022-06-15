@@ -105,7 +105,9 @@ function search(searchHistory) {
 
     city = toTitleCase($(searchInputEl).val().trim());
 
-    if(currentHistory.includes(city,0)) {
+    if(city==="") {
+      return;
+    } else if(currentHistory.includes(city,0)) {
       return;
     } else {
       currentHistory.push(city);
