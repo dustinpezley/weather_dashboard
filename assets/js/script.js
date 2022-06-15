@@ -87,29 +87,34 @@ function getCoordinates(city) {
     if(response.ok){
       response.json().then(function(city) {
         getWeather(city[0].lat, city[0].lon, city[0].name);
-        console.log(city);
       })
     }
   })
 }
 
-function search() {
-  // Converts to title case
-  function toTitleCase(str) {
-    let lower = str.toLowerCase();
-    return lower.replace(/(?:^|\s)\w/g, function(match){
-      return match.toUpperCase();
-    })
-  };
+function search(searchHistory) { 
+  let city = "";
 
-  let city = toTitleCase($(searchInputEl).val().trim());
+  if(!searchHistory) {
+    function toTitleCase(str) {
+      let lower = str.toLowerCase();
+      return lower.replace(/(?:^|\s)\w/g, function(match){
+        return match.toUpperCase();
+      })
+    };
 
-  if(currentHistory.includes(city,0)) {
-    return;
+    city = toTitleCase($(searchInputEl).val().trim());
+
+    if(currentHistory.includes(city,0)) {
+      return;
+    } else {
+      currentHistory.push(city);
+      localStorage.setItem("search",JSON.stringify(currentHistory));
+    }
   } else {
-    currentHistory.push(city);
-    localStorage.setItem("search",JSON.stringify(currentHistory));
+    city = searchHistory.trim();
   }
+  console.log(city);
 
   getCoordinates(city);
 
@@ -150,10 +155,13 @@ $(searchButtonEl).on("click",searchInputEl,function(){
 });
 
 //search on history item when clicked
-$(searchHistoryEl).on("click",searchHistoryEl.target, function(){
+//do not log entry to search history as it already exists there
+$(searchHistoryEl).on("click", function(event){
+  var historySearchTerm = event.target.textContent;
   currentDayEl.children("*").remove();
   forecastEl.children("*").remove();
-  console.log(target);
+  console.log(historySearchTerm);
+  search(historySearchTerm);
 });
 
 loadStorage();
