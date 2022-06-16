@@ -18,12 +18,11 @@ function getWeather(lat, lon, city) {
     if(response.ok){
       response.json().then(function(data){
         // calculates and formats today's date
-        const currentDate = new Date(data.current.dt * 1000);
+        const currentDate = new Date(data.daily[0].dt * 1000);
         const day = currentDate.getDate();
         const month = currentDate.getMonth() +1;
         const year = currentDate.getFullYear();
         const date = month+"/"+day+"/"+year;
-        console.log(data);
         // adds current day element and info
         currentDayEl.addClass("border border-dark w-100");
         currentDayEl.append(
@@ -75,6 +74,8 @@ function getWeather(lat, lon, city) {
           );
         }
       })
+    } else {
+      document.location.replace(".index.html");
     }
   })
 }
@@ -108,7 +109,7 @@ function search(searchHistory) {
     if(city==="") {
       return;
     } else if(currentHistory.includes(city,0)) {
-      return;
+      // do nothing and continue with search
     } else {
       currentHistory.push(city);
       localStorage.setItem("search",JSON.stringify(currentHistory));
@@ -116,7 +117,6 @@ function search(searchHistory) {
   } else {
     city = searchHistory.trim();
   }
-  console.log(city);
 
   getCoordinates(city);
 
@@ -162,7 +162,6 @@ $(searchHistoryEl).on("click", function(event){
   var historySearchTerm = event.target.textContent;
   currentDayEl.children("*").remove();
   forecastEl.children("*").remove();
-  console.log(historySearchTerm);
   search(historySearchTerm);
 });
 
