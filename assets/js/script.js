@@ -82,7 +82,7 @@ function getWeather(lat, lon, city) {
 
 // Convert city in search to latitude and longitude coordinates.
 function getCoordinates(city) {
-  let apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q="+city+"&limit=1&appid="+apiKey;
+  let apiUrl = "https://api.openweathermap.org/geo/1.0/direct?q="+city+"&limit=1&appid="+apiKey;
 
   fetch(apiUrl).then(function(response){
     if(response.ok){
